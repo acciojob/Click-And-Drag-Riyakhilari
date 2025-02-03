@@ -49,17 +49,16 @@
 
 <script>
     const container = document.querySelector('.container');
-    const items = document.querySelectorAll('.items');
     let selectedItem = null;
     let offsetX, offsetY;
 
-    items.forEach(item => {
-        item.addEventListener('mousedown', (e) => {
-            selectedItem = item;
-            offsetX = e.clientX - item.getBoundingClientRect().left;
-            offsetY = e.clientY - item.getBoundingClientRect().top;
-            item.style.cursor = 'grabbing';
-        });
+    document.addEventListener('mousedown', (e) => {
+        if (!e.target.classList.contains('items')) return;
+
+        selectedItem = e.target;
+        offsetX = e.clientX - selectedItem.getBoundingClientRect().left;
+        offsetY = e.clientY - selectedItem.getBoundingClientRect().top;
+        selectedItem.style.cursor = 'grabbing';
     });
 
     document.addEventListener('mousemove', (e) => {
@@ -72,7 +71,7 @@
         const containerRect = container.getBoundingClientRect();
         const itemRect = selectedItem.getBoundingClientRect();
 
-        // Keep the item within the container
+        // Ensure item stays inside the container
         if (x < containerRect.left) x = containerRect.left;
         if (y < containerRect.top) y = containerRect.top;
         if (x + itemRect.width > containerRect.right) x = containerRect.right - itemRect.width;
